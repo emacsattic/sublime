@@ -68,19 +68,22 @@ through ELPA")
 ;;; ---------------------------------------------------------------------------
 
 ;;;###autoload
+(defun sublime-setup-autopair ()
+  "Loads `autopair-global-mode'"
+  (interactive)
+  (when (not (featurep 'autopair))
+    (require 'autopair))
+  (autopair-global-mode t))
+
+
+;;;###autoload
 (defun sublime-setup-elpa-repositories ()
   "Configure ELPA to use the GNU and Marmalade repositories."
   (custom-set-variables '(package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 											("marmalade" . "http://marmalade-repo.org/packages/")))))
 
 
-(defun sublime-setup-recentf ()
-  "Configures `recentf' for use in combination with `ido-mode'"
-  (custom-set-variables '(recentf-max-saved-items 75))
-  (recentf-mode t)
-  (global-set-key (kbd "C-x C-r") 'sublime-open-recent-file))
-
-
+;;;###autoload
 (defun sublime-setup-file-hooks ()
   (custom-set-variables '(auto-save-default nil)
                         '(backup-inhibited t)
@@ -88,10 +91,37 @@ through ELPA")
 						'(indent-tabs-mode nil)
                         '(indicate-empty-lines t)
                         '(require-final-newline t)
-                        '(tab-width 4))
+                        '(tab-width 4)
+                        '(ruby-indent-level tab-width))
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'before-save-hook 'time-stamp)
   (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p nil t))
+
+
+;;;###autoload
+(defun sublime-setup-indentation ()
+  "Homogeneous indentation level for various modes."
+  (interactive)
+  (custom-set-variables '(tab-width 4)
+                        '(puppet-indent-level tab-width)
+                        '(ruby-indent-level tab-width)))
+
+
+;;;###autoload
+(defun sublime-setup-mode-assoc ()
+  "Configures file-extension -> mode association."
+  (interactive)
+  (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG" . text-mode))
+  (add-to-list 'auto-mode-alist '("\\.markdown$" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
+
+
+;;;###autoload
+(defun sublime-setup-recentf ()
+  "Configures `recentf' for use in combination with `ido-mode'"
+  (custom-set-variables '(recentf-max-saved-items 75))
+  (recentf-mode t)
+  (global-set-key (kbd "C-x C-r") 'sublime-open-recent-file))
 
 
 
@@ -124,6 +154,8 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
                         '(ido-max-prospects 8)
                         '(ido-use-filename-at-point 'guess)
                         '(ido-enable-flex-matching t))
+  (setq ffip-patterns '("*.*"))
+  (setq ffip-limit 1024)
   (ido-mode t)
   (ido-ubiquitous t)
   (smex-initialize)
@@ -177,11 +209,15 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 (defun sublime-setup-ui ()
   "Enables various "
   (interactive)
-  (custom-set-variables '(echo-keystrokes 0.01)
+  (custom-set-variables '(cursor-type 'bar)
+                        '(echo-keystrokes 0.01)
 						'(inhibit-startup-screen t)
-						'(linum-format "  %d  "))
+						'(linum-format "  %d  ")
+                        '(show-paren-delay 0))
+  (set-face-attribute 'show-paren-match-face nil :underline t)
   (setq frame-title-format '("%f - " user-real-login-name "@" system-name))
   (fset 'yes-or-no-p 'y-or-n-p)
+  (blink-cursor-mode t)
   (color-theme-monokai)
   (column-number-mode t)
   (global-linum-mode t)
@@ -189,7 +225,6 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (menu-bar-mode t) ; Necessary under Unity
   (scroll-bar-mode -1)
   (show-paren-mode t)
-  (tabbar-mode -1)
   (toggle-truncate-lines t)
   (tool-bar-mode -1)
   (which-function-mode t))
@@ -206,8 +241,11 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   "Enables various customizations to make Emacs similar to Sublime Text"
   (interactive)
   ;; Under-the hood settings
+  (sublime-setup-autopair)
   (sublime-setup-elpa-repositories)
   (sublime-setup-file-hooks)
+  (sublime-setup-indentation)
+  (sublime-setup-mode-assoc)
   (sublime-setup-recentf)
   ;; Keyboard settings
   (sublime-setup-cua-keybindings)
