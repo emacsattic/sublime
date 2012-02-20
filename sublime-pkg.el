@@ -1,0 +1,16 @@
+(define-package "sublime" "0.0.1"
+  "Sublime Text 2 Emulation for Emacs"
+  '((coffee-mode "0.3.0")
+    (color-theme "6.6.1")
+    (color-theme-monokai "0.0.2")
+    (find-file-in-project "3.0")
+    (haml-mode "3.0.14")
+    (ido-ubiquitous "1.0")
+    (less-css-mode "0.6")
+    (magit "1.1.1")
+    (markdown-mode "1.8.1")
+    (paredit "22")
+    (sass-mode "3.0.14")
+    (smex "1.1.2")
+    (yaml-mode "0.0.7")
+    (yasnippet "0.6.1")))
