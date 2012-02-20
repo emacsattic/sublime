@@ -1,6 +1,7 @@
 (define-package "sublime" "0.0.1"
   "Sublime Text 2 Emulation for Emacs"
-  '((coffee-mode "0.3.0")
+  '((autopair "0.3")
+    (coffee-mode "0.3.0")
     (color-theme "6.6.1")
     (color-theme-monokai "0.0.2")
     (find-file-in-project "3.0")
