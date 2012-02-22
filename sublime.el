@@ -49,12 +49,14 @@ through ELPA")
     (menu-find-file-existing)))
 
 
+;;;###autoload
 (defun sublime-open-recent-file ()
   "Integrates `ido-completing-read' with `recentf-mode'"
   (interactive)
   (find-file (ido-completing-read "Find recent file: " recentf-list)))
 
 
+;;;###autoload
 (defun sublime-kill-current-buffer ()
   "Kills the current buffer"
   (interactive)
@@ -74,6 +76,15 @@ through ELPA")
   (when (not (featurep 'autopair))
     (require 'autopair))
   (autopair-global-mode t))
+
+
+;;;###autoload
+(defun sublime-setup-clipboard ()
+  "Make use of X11 clipboard on *nix"
+  (interactive)
+  (custom-set-variables '(mouse-drag-copy-region nil)
+                        '(x-select-enable-primary nil)
+                        '(x-select-enable-clipboard t)))
 
 
 ;;;###autoload
@@ -154,8 +165,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
                         '(ido-max-prospects 8)
                         '(ido-use-filename-at-point 'guess)
                         '(ido-enable-flex-matching t))
-  (setq ffip-patterns '("*.*"))
-  (setq ffip-limit 1024)
+  (setq ffip-limit 2048)
   (ido-mode t)
   (ido-ubiquitous t)
   (smex-initialize)
@@ -195,13 +205,14 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
     (setq stack-trace-on-error t))
   (ecb-activate))
 
+
 ;;;###autoload
 (defun sublime-setup-font ()
   "Chooses a font native to the platform (if available)."
   (interactive)
   (when (string-equal system-type "gnu/linux")
     (if (find-font (font-spec :name "Ubuntu Mono"))
-	(set-default-font "Ubuntu Mono-12")
+        (set-default-font "Ubuntu Mono-12")
       (set-default-font "Monospace-12"))))
 
 
@@ -214,20 +225,22 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 						'(inhibit-startup-screen t)
 						'(linum-format "  %d  ")
                         '(show-paren-delay 0))
-  (set-face-attribute 'show-paren-match-face nil :underline t)
   (setq frame-title-format '("%f - " user-real-login-name "@" system-name))
   (fset 'yes-or-no-p 'y-or-n-p)
   (blink-cursor-mode t)
-  (color-theme-monokai)
   (column-number-mode t)
   (global-linum-mode t)
   (global-hl-line-mode t)
   (menu-bar-mode t) ; Necessary under Unity
   (scroll-bar-mode -1)
+  ;; Show Paren mode
   (show-paren-mode t)
+  (set-face-attribute 'show-paren-match-face nil :underline t)
+  ;; ---------------
   (toggle-truncate-lines t)
   (tool-bar-mode -1)
-  (which-function-mode t))
+  (which-function-mode t)
+  (color-theme-monokai))
 
 
 
@@ -242,6 +255,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (interactive)
   ;; Under-the hood settings
   (sublime-setup-autopair)
+  (sublime-setup-clipboard)
   (sublime-setup-elpa-repositories)
   (sublime-setup-file-hooks)
   (sublime-setup-indentation)
