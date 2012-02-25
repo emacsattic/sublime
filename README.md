@@ -6,6 +6,16 @@ Sublime Text 2 emulation for GNU Emacs.
 
 
 
+Installation
+============
+
+This package is available from [Marmalade](http://marmalade-repo.org/). Refer to
+its documentation to learn how to use Marmalade and `package.el` with your
+version of Emacs.
+
+
+
+
 Project Information
 ===================
 
