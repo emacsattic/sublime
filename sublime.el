@@ -27,17 +27,6 @@
 ;;;
 
 ;;; ---------------------------------------------------------------------------
-;;; Custom
-;;; ---------------------------------------------------------------------------
-
-(defcustom sublime-skip-autoload nil
-  "Whether to skip autoloading Sublime emulation when installed
-through ELPA")
-
-
-
-
-;;; ---------------------------------------------------------------------------
 ;;; Utility Functions
 ;;; ---------------------------------------------------------------------------
 
@@ -68,15 +57,6 @@ through ELPA")
 ;;; ---------------------------------------------------------------------------
 ;;; Under The Hood
 ;;; ---------------------------------------------------------------------------
-
-;;;###autoload
-(defun sublime-setup-autopair ()
-  "Loads `autopair-global-mode'"
-  (interactive)
-  (when (not (featurep 'autopair))
-    (require 'autopair))
-  (autopair-global-mode t))
-
 
 ;;;###autoload
 (defun sublime-setup-clipboard ()
@@ -240,6 +220,8 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (toggle-truncate-lines t)
   (tool-bar-mode -1)
   (which-function-mode t)
+  (when (not (featurep 'color-theme))
+    (require 'color-theme))
   (color-theme-monokai))
 
 
@@ -254,7 +236,6 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   "Enables various customizations to make Emacs similar to Sublime Text"
   (interactive)
   ;; Under-the hood settings
-  (sublime-setup-autopair)
   (sublime-setup-clipboard)
   (sublime-setup-elpa-repositories)
   (sublime-setup-file-hooks)
@@ -271,8 +252,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 
 ;;;###autoload
 (progn
-  (unless sublime-skip-autoload
-    (sublime-activate)))
+  (sublime-activate))
 
 (provide 'sublime-emacs)
 
