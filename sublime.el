@@ -26,9 +26,30 @@
 ;;; send me.
 ;;;
 
+(require 'color-theme)
+
+(unless (>= 24 emacs-major-version)
+  (error "sublime.el requires Emacs 24 or later."))
+
 ;;; ---------------------------------------------------------------------------
 ;;; Utility Functions
 ;;; ---------------------------------------------------------------------------
+
+;;;###autoload
+(defun sublime-escape-quit ()
+  "Forcefully quit anything which keeps the minibuffer busy."
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-window (active-minibuffer-window)))
+  (keyboard-escape-quit))
+
+
+;;;###autoload
+(defun sublime-kill-current-buffer ()
+  "Kills the current buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
+
 
 ;;;###autoload
 (defun sublime-open-file ()
@@ -45,18 +66,16 @@
   (find-file (ido-completing-read "Find recent file: " recentf-list)))
 
 
-;;;###autoload
-(defun sublime-kill-current-buffer ()
-  "Kills the current buffer"
-  (interactive)
-  (kill-buffer (current-buffer)))
-
-
 
 
 ;;; ---------------------------------------------------------------------------
 ;;; Under The Hood
 ;;; ---------------------------------------------------------------------------
+
+(defun sublime-setup-autopair ()
+  "Enables automatic matching of parentheses."
+  (electric-pair-mode))
+
 
 ;;;###autoload
 (defun sublime-setup-clipboard ()
@@ -71,7 +90,7 @@
 (defun sublime-setup-elpa-repositories ()
   "Configure ELPA to use the GNU and Marmalade repositories."
   (custom-set-variables '(package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-											("marmalade" . "http://marmalade-repo.org/packages/")))))
+                                             ("marmalade" . "http://marmalade-repo.org/packages/")))))
 
 
 ;;;###autoload
@@ -158,15 +177,18 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   "Setup additional CUA keybindings."
   (interactive)
   (cua-mode t)
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (global-set-key (kbd "<escape>") 'sublime-escape-quit)
   (global-set-key (kbd "<f6>") 'flyspell-prog-mode)
   (global-set-key (kbd "C-/") 'comment-or-uncomment-region)
   (global-set-key (kbd "C-<backspace>") 'backward-kill-word)
   (global-set-key (kbd "C-<next>") 'next-buffer)
   (global-set-key (kbd "C-<prior>") 'previous-buffer)
   (global-set-key (kbd "C-a") 'mark-whole-buffer)
+  (global-set-key (kbd "C-f") 'isearch-forward)
   (global-set-key (kbd "C-o") 'sublime-open-file)
   (global-set-key (kbd "C-q") 'save-buffers-kill-terminal)
+  (global-set-key (kbd "C-s") 'save-buffer)
   (global-set-key (kbd "C-w") 'sublime-kill-current-buffer)
   (global-set-key (kbd "RET") 'newline-and-indent))
 
@@ -176,15 +198,6 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 ;;; ---------------------------------------------------------------------------
 ;;; User Interface
 ;;; ---------------------------------------------------------------------------
-
-;;;###autoload
-(defun sublime-setup-ecb ()
-  "Activates a two panel layout like SublimeText default."
-  ;; Works around a bug in ECB when inside Emacs 24 or later.
-  (when (>= emacs-major-version 24)
-    (setq stack-trace-on-error t))
-  (ecb-activate))
-
 
 ;;;###autoload
 (defun sublime-setup-font ()
@@ -198,20 +211,20 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 
 ;;;###autoload
 (defun sublime-setup-ui ()
-  "Enables various "
+  "Various user interface customizations."
   (interactive)
   (custom-set-variables '(cursor-type 'bar)
                         '(echo-keystrokes 0.01)
 						'(inhibit-startup-screen t)
 						'(linum-format "  %d  ")
-                        '(show-paren-delay 0))
-  (setq frame-title-format '("%f - " user-real-login-name "@" system-name))
+                        '(show-paren-delay 0)
+                        '(frame-title-format '("%f - " user-real-login-name "@" system-name)))
   (fset 'yes-or-no-p 'y-or-n-p)
   (blink-cursor-mode t)
   (column-number-mode t)
   (global-linum-mode t)
   (global-hl-line-mode t)
-  (menu-bar-mode t) ; Necessary under Unity
+  (menu-bar-mode -1)
   (scroll-bar-mode -1)
   ;; Show Paren mode
   (show-paren-mode t)
@@ -220,8 +233,6 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (toggle-truncate-lines t)
   (tool-bar-mode -1)
   (which-function-mode t)
-  (when (not (featurep 'color-theme))
-    (require 'color-theme))
   (color-theme-monokai))
 
 
@@ -236,6 +247,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   "Enables various customizations to make Emacs similar to Sublime Text"
   (interactive)
   ;; Under-the hood settings
+  (sublime-setup-autopair)
   (sublime-setup-clipboard)
   (sublime-setup-elpa-repositories)
   (sublime-setup-file-hooks)
