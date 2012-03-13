@@ -1,7 +1,7 @@
 Contents
 ========
 
-Sublime Text 2 emulation for GNU Emacs.
+Sublime Text 2 emulation for GNU Emacs. **Requires Emacs 24**.
 
 
 
