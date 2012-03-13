@@ -1,9 +1,8 @@
-(define-package "sublime" "0.0.3"
-  "Sublime Text 2 Emulation for Emacs"
-  '((autopair "0.3")
-    (coffee-mode "0.3.0")
+(define-package "sublime" "0.0.4"
+  "REQUIRES EMACS 24 - Sublime Text 2 Emulation for Emacs"
+  '((coffee-mode "0.3.0")
     (color-theme "6.5.5")
-    (color-theme-monokai "0.0.2")
+    (color-theme-monokai "0.0.5")
     (find-file-in-project "3.0")
     (haml-mode "3.0.14")
     (ido-ubiquitous "1.0")
