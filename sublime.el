@@ -26,8 +26,6 @@
 ;;; send me.
 ;;;
 
-(require 'color-theme)
-
 (unless (>= 24 emacs-major-version)
   (error "sublime.el requires Emacs 24 or later."))
 
@@ -219,6 +217,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 						'(linum-format "  %d  ")
                         '(show-paren-delay 0)
                         '(frame-title-format '("%f - " user-real-login-name "@" system-name)))
+  (load-theme 'monokai)
   (fset 'yes-or-no-p 'y-or-n-p)
   (blink-cursor-mode t)
   (column-number-mode t)
@@ -232,8 +231,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   ;; ---------------
   (toggle-truncate-lines t)
   (tool-bar-mode -1)
-  (which-function-mode t)
-  (color-theme-monokai))
+  (which-function-mode t))
 
 
 
