@@ -1,4 +1,4 @@
-(define-package "sublime" "0.0.4"
+(define-package "sublime" "@@VERSION@@"
   "REQUIRES EMACS 24 - Sublime Text 2 Emulation for Emacs"
   '((coffee-mode "0.3.0")
     (find-file-in-project "3.0")
