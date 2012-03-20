@@ -70,8 +70,10 @@
 ;;; Under The Hood
 ;;; ---------------------------------------------------------------------------
 
-(defun sublime-setup-autopair ()
+(defun sublime-setup-electric ()
   "Enables automatic matching of parentheses."
+  (electric-indent-mode)
+  (electric-layout-mode)
   (electric-pair-mode))
 
 
@@ -245,8 +247,8 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   "Enables various customizations to make Emacs similar to Sublime Text"
   (interactive)
   ;; Under-the hood settings
-  (sublime-setup-autopair)
   (sublime-setup-clipboard)
+  (sublime-setup-electric)
   (sublime-setup-elpa-repositories)
   (sublime-setup-file-hooks)
   (sublime-setup-indentation)
