@@ -1,3 +1,5 @@
+VERSION = 0.0.6
+
 TAR = tar
 TAR_ARCHIVE = sublime-$(VERSION).tar
 TAR_OPTIONS = --transform 's|^|sublime-$(VERSION)/|'
