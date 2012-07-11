@@ -70,6 +70,7 @@
 ;;; Under The Hood
 ;;; ---------------------------------------------------------------------------
 
+;;;###autoload
 (defun sublime-setup-electric ()
   "Enables automatic matching of parentheses."
   (electric-indent-mode)
@@ -79,11 +80,17 @@
 
 ;;;###autoload
 (defun sublime-setup-clipboard ()
-  "Make use of X11 clipboard on *nix"
+  "Improve interaction with X11 clipboard giving Emacs the 'feel'
+of a modern X11 application."
   (interactive)
-  (custom-set-variables '(mouse-drag-copy-region nil)
-                        '(x-select-enable-primary nil)
-                        '(x-select-enable-clipboard t)))
+  (global-set-key "\C-w" 'clipboard-kill-region)
+  (global-set-key "\C-y" 'clipboard-yank)
+  (global-set-key "\M-w" 'clipboard-kill-ring-save)
+  (global-set-key [mouse-2] 'mouse-yank-primary)
+  (setq mouse-drag-copy-region nil)
+  (setq select-active-regions t)
+  (setq x-select-enable-clipboard t)
+  (setq x-select-enable-primary nil))
 
 
 ;;;###autoload
@@ -185,10 +192,10 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (global-set-key (kbd "C-<next>") 'next-buffer)
   (global-set-key (kbd "C-<prior>") 'previous-buffer)
   (global-set-key (kbd "C-a") 'mark-whole-buffer)
-  (global-set-key (kbd "C-f") 'isearch-forward)
+  ;; (global-set-key (kbd "C-f") 'isearch-forward)
   (global-set-key (kbd "C-o") 'sublime-open-file)
   (global-set-key (kbd "C-q") 'save-buffers-kill-terminal)
-  (global-set-key (kbd "C-s") 'save-buffer)
+  ;; (global-set-key (kbd "C-s") 'save-buffer)
   (global-set-key (kbd "C-w") 'sublime-kill-current-buffer)
   (global-set-key (kbd "RET") 'newline-and-indent))
 
@@ -206,7 +213,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (when (string-equal system-type "gnu/linux")
     (if (find-font (font-spec :name "Ubuntu Mono"))
         (set-default-font "Ubuntu Mono-12")
-      (set-default-font "Monospace-12"))))
+      (set-default-font "Monospace-11"))))
 
 
 ;;;###autoload
@@ -227,11 +234,13 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (global-hl-line-mode t)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+  ;; Truncate lines everywhere
+  (set-default 'truncate-lines t)
+  (setq truncate-partial-width-windows nil)
   ;; Show Paren mode
   (show-paren-mode t)
   (set-face-attribute 'show-paren-match-face nil :underline t)
   ;; ---------------
-  (toggle-truncate-lines t)
   (tool-bar-mode -1)
   (which-function-mode t))
 
@@ -239,14 +248,14 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 
 
 ;;; ---------------------------------------------------------------------------
-;;; Wholesale Activation
+;;; Activates all customizations.
 ;;; ---------------------------------------------------------------------------
 
 ;;;###autoload
 (defun sublime-activate ()
   "Enables various customizations to make Emacs similar to Sublime Text"
   (interactive)
-  ;; Under-the hood settings
+  ;; Under the Hood Settings
   (sublime-setup-clipboard)
   (sublime-setup-electric)
   (sublime-setup-elpa-repositories)
@@ -254,7 +263,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (sublime-setup-indentation)
   (sublime-setup-mode-assoc)
   (sublime-setup-recentf)
-  ;; Keyboard settings
+  ;; Keyboard Settings
   (sublime-setup-cua-keybindings)
   (sublime-setup-go-to-anything)
   (sublime-setup-snippets)
