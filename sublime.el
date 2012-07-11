@@ -275,6 +275,6 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 (progn
   (sublime-activate))
 
-(provide 'sublime-emacs)
+(provide 'sublime)
 
 ;;; sublime.el ends here
