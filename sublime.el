@@ -21,13 +21,11 @@
 ;;; along with this program; if not, write to the Free Software
 ;;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;;;
-;;; Please note that this Emacs package is being developed to cover _my_ needs
-;;; before those of anyone else. I will not include each and every patch you
-;;; send me.
-;;;
+
 
 (unless (>= 24 emacs-major-version)
   (error "sublime.el requires Emacs 24 or later."))
+
 
 ;;; ---------------------------------------------------------------------------
 ;;; Utility Functions
@@ -35,7 +33,7 @@
 
 ;;;###autoload
 (defun sublime-escape-quit ()
-  "Forcefully quit anything which keeps the minibuffer busy."
+  "Forcefully closes anything which keeps the minibuffer busy."
   (interactive)
   (when (active-minibuffer-window)
     (select-window (active-minibuffer-window)))
@@ -44,7 +42,7 @@
 
 ;;;###autoload
 (defun sublime-kill-current-buffer ()
-  "Kills the current buffer"
+  "Kills the current buffer."
   (interactive)
   (kill-buffer (current-buffer)))
 
@@ -64,6 +62,14 @@
   (find-file (ido-completing-read "Find recent file: " recentf-list)))
 
 
+;;;###autoload
+(defun sublime-indent-buffer ()
+  "Re-indents the current buffer."
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+
+
 
 
 ;;; ---------------------------------------------------------------------------
@@ -73,7 +79,7 @@
 ;;;###autoload
 (defun sublime-setup-electric ()
   "Enables automatic matching of parentheses."
-  (electric-indent-mode)
+  ; (electric-indent-mode) ; - DISABLED: Annoying for some users.
   (electric-layout-mode)
   (electric-pair-mode))
 
@@ -110,6 +116,10 @@ of a modern X11 application."
                         '(require-final-newline t)
                         '(tab-width 4)
                         '(ruby-indent-level tab-width))
+  ;; Flyspell
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  ;; File Manipulation
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'before-save-hook 'time-stamp)
   (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p nil t))
@@ -180,24 +190,25 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 
 
 ;;;###autoload
-(defun sublime-setup-cua-keybindings ()
-  "Setup additional CUA keybindings."
+(defun sublime-setup-keybindings ()
+  "Additional keybindings Setup additional CUA keybindings."
   (interactive)
+  ;; CUA Mode
   (cua-mode t)
-  ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-  (global-set-key (kbd "<escape>") 'sublime-escape-quit)
-  (global-set-key (kbd "<f6>") 'flyspell-prog-mode)
+  ;; Editing
   (global-set-key (kbd "C-/") 'comment-or-uncomment-region)
   (global-set-key (kbd "C-<backspace>") 'backward-kill-word)
+  (global-set-key (kbd "C-a") 'mark-whole-buffer)
+  (global-set-key (kbd "RET") 'newline-and-indent)
+  ;; Buffer Navigation
   (global-set-key (kbd "C-<next>") 'next-buffer)
   (global-set-key (kbd "C-<prior>") 'previous-buffer)
-  (global-set-key (kbd "C-a") 'mark-whole-buffer)
-  ;; (global-set-key (kbd "C-f") 'isearch-forward)
-  (global-set-key (kbd "C-o") 'sublime-open-file)
   (global-set-key (kbd "C-q") 'save-buffers-kill-terminal)
-  ;; (global-set-key (kbd "C-s") 'save-buffer)
-  (global-set-key (kbd "C-w") 'sublime-kill-current-buffer)
-  (global-set-key (kbd "RET") 'newline-and-indent))
+  ;; Custom Functions
+  (global-set-key (kbd "<escape>") 'sublime-escape-quit)
+  (global-set-key (kbd "<f12>") 'sublime-indent-buffer)
+  (global-set-key (kbd "C-o") 'sublime-open-file)
+  (global-set-key (kbd "C-w") 'sublime-kill-current-buffer))
 
 
 
@@ -253,7 +264,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
 
 ;;;###autoload
 (defun sublime-activate ()
-  "Enables various customizations to make Emacs similar to Sublime Text"
+  "Enables all customization options provided by `sublime.el'."
   (interactive)
   ;; Under the Hood Settings
   (sublime-setup-clipboard)
@@ -264,7 +275,7 @@ It binds C-S-p to `SMEX' and C-p to `FIND-FILE-IN-PROJECT'."
   (sublime-setup-mode-assoc)
   (sublime-setup-recentf)
   ;; Keyboard Settings
-  (sublime-setup-cua-keybindings)
+  (sublime-setup-keybindings)
   (sublime-setup-go-to-anything)
   (sublime-setup-snippets)
   ;; UI Settings
