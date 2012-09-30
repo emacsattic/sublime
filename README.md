@@ -13,6 +13,9 @@ This package is available from [Marmalade](http://marmalade-repo.org/). Refer to
 its documentation to learn how to use Marmalade and `package.el` with your
 version of Emacs.
 
+It depends on [gpicker](https://savannah.nongnu.org/projects/gpicker/) being
+installed on the target system.
+
 
 
 
