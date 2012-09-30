@@ -1,4 +1,4 @@
-;;; sublime.el --- SublimeText emulation
+;;; sublime-support.el --- SublimeText emulation - Support Files
 ;;;
 ;;; Copyright (C) 2012 Lorenzo Villani.
 ;;;
@@ -22,27 +22,45 @@
 ;;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;;;
 
-(unless (>= 24 emacs-major-version)
-  (error "sublime.el requires Emacs 24 or later."))
-
-(require 'sublime-keys)
-(require 'sublime-project)
-(require 'sublime-system)
-(require 'sublime-ui)
 
 ;;;###autoload
-(defun sublime ()
-  "Activates all customization options provided by `sublime.el'."
+(defun sublime-escape-quit ()
+  "Forcefully closes the minibuffer window."
   (interactive)
-  (sublime-keys)
-  (sublime-project)
-  (sublime-system)
-  (sublime-ui))
+  (when (active-minibuffer-window)
+    (select-window (active-minibuffer-window)))
+  (keyboard-escape-quit))
+
 
 ;;;###autoload
-(progn
-  (sublime))
+(defun sublime-kill-current-buffer ()
+  "Kills the current buffer."
+  (interactive)
+  (kill-buffer (current-buffer)))
 
-(provide 'sublime)
 
-;;; sublime.el ends here
+;;;###autoload
+(defun sublime-open-recent-file ()
+  "Integrates `ido-completing-read' with `recentf-mode'"
+  (interactive)
+  (find-file (ido-completing-read "Find recent file: " recentf-list)))
+
+
+;;;###autoload
+(defun sublime-indent-buffer ()
+  "Re-indents the current buffer."
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+
+
+;;;###autoload
+(defun sublime-go-to-anything ()
+  "Go to anything."
+  (interactive)
+  ()
+  )
+
+(provide 'sublime-support)
+
+;;; sublime-support.el ends here
