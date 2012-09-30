@@ -3,4 +3,5 @@
   '((ido-ubiquitous "1.0")
     (monokai-theme "0.0.6")
     (project "1.0.0")
+    (smex "2.0")
     (yasnippet "0.6.1")))
