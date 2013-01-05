@@ -1,3 +1,10 @@
+DELETION NOTICE
+===============
+
+This project isn't being maintained anymore and its contents __will be deleted__ by March 1st, 2013.
+
+
+
 Contents
 ========
 
